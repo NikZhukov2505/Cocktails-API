@@ -3,12 +3,14 @@ const get_ALL_COCKTAILS = API + 'filter.php?c=Cocktail'
 const get_BY_NAME = API + 'search.php?s='
 const filter_Alcoholic = API + 'filter.php?a='
 const get_ID = API + 'lookup.php?i='
+const get_ingr = API + 'search.php?i='
 
 const form = document.getElementById('search')
 const input = document.getElementById('inp')
 const btn = document.getElementById('btn')
 const select = document.getElementById('select')
 const output = document.getElementById('output')
+
 
 
 const getAllCocktails = async () => {
@@ -46,6 +48,12 @@ const getCocktailsById = async (id) => {
     renderDetailInfo(response.drinks[0])
 
 }
+const getInfoByIngridient = async (ingr) => {
+    const request = await fetch(get_ingr + ingr)
+    const response = await request.json()
+    console.log(response);
+    renderIngridient(response.ingredients[0])
+}
 
 const renderDetailInfo = (name) => {
     output.innerHTML = ''
@@ -62,23 +70,39 @@ const renderDetailInfo = (name) => {
     ingrDiv.classList = ('ingrDiv')
     const text = document.createElement('h3')
     text.textContent = 'Ингридиенты: '
-    const ingr1 = document.createElement('h4')
-    ingr1.textContent = name.strIngredient1
-    const ingr2 = document.createElement('h4')
-    ingr2.textContent = name.strIngredient2
-    const ingr3 = document.createElement('h4')
-    ingr3.textContent = name.strIngredient3
-    const ingr4 = document.createElement('h4')
-    ingr4.textContent = name.strIngredient4
 
-    ingrDiv.append(alc, instructions, text, ingr1, ingr2, ingr3, ingr4)
-    card2.append(img2, ingrDiv)
+
+
+
+    ingrDiv.append(alc, instructions, text,)
+    card2.append(img2, ingrDiv, backButton)
     output.append(card2)
 
+    for (let key in name) {
+        if (key.includes('strIngredient') && name[key] != null) {
+            let ingr = document.createElement('li')
+            ingr.textContent = name[key]
+            ingrDiv.append(ingr)
+            ingr.addEventListener('click', () => {
+                getInfoByIngridient(name[key]);
 
+            })
+        }
+    }
 
 }
 
+const renderIngridient = (ingridient) => {
+    output.innerHTML = ""
+    const card3 = document.createElement('div')
+    card3.classList = ('card2 wow bounceInDown')
+    card3.innerHTML = `
+    <h4>${ingridient.strIngredient}</h4>
+    <h4>Alcohol: ${ingridient.strAlcohol}</h4>
+    <h4>${ingridient.strDescription}</h4>
+    `;
+    output.append(card3, backButton)
+}
 
 const renderCocktails = (data) => {
     output.innerHTML = ""
@@ -107,5 +131,10 @@ form.addEventListener('submit', (event) => event.preventDefault())
 input.addEventListener('keydown', () => getCocktailsByName())
 
 select.addEventListener('change', () => filterByAlcohol())
+
+const backButton = document.createElement('button')
+backButton.classList = ('btn2')
+backButton.innerHTML = '< Back'
+backButton.addEventListener('click', getAllCocktails)
 
 getAllCocktails()
