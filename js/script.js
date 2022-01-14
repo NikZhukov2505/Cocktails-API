@@ -53,7 +53,7 @@ const renderDetailInfo = (name) => {
     img2.classList = ('img2')
     img2.src = name.strDrinkThumb
     const card2 = document.createElement('div')
-    card2.classList = ('card2')
+    card2.classList = ('card2 wow bounceInDown')
     const alc = document.createElement('h3')
     alc.textContent = 'Alcoholic: ' + name.strAlcoholic
     const instructions = document.createElement('h3')
@@ -85,7 +85,7 @@ const renderCocktails = (data) => {
     data ?
         data.map((el) => {
             const card = document.createElement('div')
-            card.classList = ('card')
+            card.classList = ('card wow fadeInUpBig')
             const img = document.createElement('img')
             const name = document.createElement('h2')
 
